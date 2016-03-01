@@ -40,7 +40,7 @@ var bigpicture = (function () {
         bp.style.top = bp.y + 'px';
     };
 
-    var hammertime = new Hammer(bpContainer);
+    var hammertime = new Hammer(document.body);
 
     /*
      * TEXT BOXES
@@ -137,7 +137,7 @@ var bigpicture = (function () {
 
 
     hammertime.on('pan', function (ev) {
-        console.log(ev);
+        //console.log(ev);
     });
 
     /*
@@ -301,7 +301,7 @@ var bigpicture = (function () {
             // Calculate zoom factor.
             var zoomFactor = 1.7;
             if (e.scale) { // If pinch zoom.
-                zoomFactor = e.scale + (e.scale - 1) / 1.2;
+                zoomFactor = e.scale + 1.2 * (1 - e.scale);
                 e.clientX = e.center.x;
                 e.clientY = e.center.y;
 
@@ -325,8 +325,12 @@ var bigpicture = (function () {
         bpContainer.addEventListener('DOMMouseScroll', mousewheel, false);
     }
 
-    hammertime.on('pinch', function (ev) {
+    hammertime.on('pinchout pinchin', function (ev) {
         //console.log(ev);
+    });
+
+    hammertime.on('pinchmove', function(ev) {
+        console.log(ev);
         mousewheel(ev);
     });
     /*
