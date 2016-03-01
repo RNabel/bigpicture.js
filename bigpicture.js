@@ -143,7 +143,7 @@ var bigpicture = (function () {
     /*
      * ZOOM
      */
-    hammertime.get('pinch').set({ enable: true });
+    hammertime.get('pinch').set({enable: true});
 
 
     bpContainer.ondblclick = function (e) {
@@ -301,7 +301,7 @@ var bigpicture = (function () {
             // Calculate zoom factor.
             var zoomFactor = 1.7;
             if (e.scale) { // If pinch zoom.
-                zoomFactor = e.scale;
+                zoomFactor = e.scale + (e.scale - 1) / 1.2;
                 e.clientX = e.center.x;
                 e.clientY = e.center.y;
 
