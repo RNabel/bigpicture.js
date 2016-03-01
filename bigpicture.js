@@ -144,9 +144,7 @@ var bigpicture = (function () {
      * ZOOM
      */
     hammertime.get('pinch').set({ enable: true });
-    hammertime.on('pinch', function (ev) {
-        console.log(ev);
-    });
+
 
     bpContainer.ondblclick = function (e) {
         e.preventDefault();
@@ -299,13 +297,24 @@ var bigpicture = (function () {
     else {
         mousewheel = function (e) {
             e.preventDefault();
-            if (e.scale) { // If touch zoom.
-                if (e.scale < 1.0) {
 
-                }
+            // Calculate zoom factor.
+            var zoomFactor = 1.7;
+            if (e.scale) { // If pinch zoom.
+                zoomFactor = e.scale;
+                e.clientX = e.center.x;
+                e.clientY = e.center.y;
+
+            } else {
+                var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+                zoomFactor = (delta > 0) ? 0.588 : 1.7
             }
-            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            onZoom((delta > 0) ? current.zoom / 1.7 : current.zoom * 1.7, current.x + e.clientX * current.zoom, current.y + e.clientY * current.zoom, e.clientX, e.clientY);
+
+            onZoom(
+                current.zoom * zoomFactor,
+                current.x + e.clientX * current.zoom,
+                current.y + e.clientY * current.zoom,
+                e.clientX, e.clientY);
         };
     }
 
@@ -316,8 +325,10 @@ var bigpicture = (function () {
         bpContainer.addEventListener('DOMMouseScroll', mousewheel, false);
     }
 
-    bpContainer.addEventListener('gestureend', mousewheel);
-
+    hammertime.on('pinch', function (ev) {
+        //console.log(ev);
+        mousewheel(ev);
+    });
     /*
      * KEYBOARD SHORTCUTS
      */
